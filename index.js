@@ -31,6 +31,17 @@ async function run() {
             res.send(result);
         });
 
+        app.get("/users/:id", async (req, res) => {
+            const id = req.params.id;
+            if (!ObjectId.isValid(id)) {
+                return res.status(400).send('Invalid user ID');
+            }
+            const query = { _id: new ObjectId(id) }
+            const user = await userCollection.findOne(query);
+            res.send(user);
+        });
+
+
         app.post("/users", async (req, res) => {
             const user = req.body;
             console.log("new user :", user);
@@ -41,9 +52,9 @@ async function run() {
         app.delete("/users/:id", async (req, res) => {
             const id = req.params.id;
             console.log("please delete id from database", id);
-            const query = {_id : new ObjectId(id)}
+            const query = { _id: new ObjectId(id) }
             const result = await userCollection.deleteOne(query);
-            res.send( result)
+            res.send(result)
         })
 
         await client.db("admin").command({ ping: 1 });

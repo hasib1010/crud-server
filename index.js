@@ -49,6 +49,41 @@ async function run() {
             res.send(result);
         });
 
+        app.put("/users/:id", async (req, res) => {
+            const id = req.params.id;
+            const User = req.body;
+            console.log(id, User);
+            const filter = { _id: new ObjectId(id) };
+            const updateUser = {
+                $set: { name: User.name, email: User.email }
+            };
+            const options = { upsert: false };
+
+            const result = await userCollection.updateOne(filter, updateUser, options);
+            res.send(result)
+        })
+
+
+        // app.put("/users/:id", async (req, res) => {
+        //     const id = req.params.id;
+        //     const User = req.body;
+        //     console.log(id, User);
+
+        //     const filter = { _id: new ObjectId(id) };
+        //     const updateUser = {
+        //         $set: { name: User.name, email: User.email }
+        //     };
+        //     const options = { upsert: true };
+
+        //     try {
+        //         const result = await userCollection.updateOne(filter, updateUser, options);
+        //         res.send(result);
+        //     } catch (error) {
+        //         console.error("Error updating user:", error);
+        //         res.status(500).send("Internal Server Error");
+        //     }
+        // });
+
         app.delete("/users/:id", async (req, res) => {
             const id = req.params.id;
             console.log("please delete id from database", id);
